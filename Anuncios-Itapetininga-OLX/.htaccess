@@ -1,0 +1,6 @@
+Options +FollowSymlinks
+
+RewriteEngine on
+AllowOverride All
+Order deny,allow
+Allow from all
