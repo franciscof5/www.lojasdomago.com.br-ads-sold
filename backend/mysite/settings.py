@@ -1,3 +1,4 @@
+import os
 """
 Django settings for mysite project.
 
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-p=c440z47ql4jh$d5hjks!fh$1#u_7u(oled+&@r1fv607g1$0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -73,10 +74,20 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': 'loja_db',
+        'PORT': 5432,
     }
 }
 
@@ -119,7 +130,9 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    "/Users/francisco/Downloads/anuncios-controle/"
+    "anuncios-controle",
+    #"/Users/francisco/Downloads/anuncios-controle/",
+    #BASE_DIR / "anuncios-controle"
 ]
 
 # Default primary key field type

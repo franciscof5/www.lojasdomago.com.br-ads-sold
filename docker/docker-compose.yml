@@ -1,11 +1,36 @@
-version: '3'
+version: '3.6'
 
 services:
-  apache:
-    image: 'php:7.4-apache'
-    container_name: php
-    restart: always
-    ports:
-      - '80:80'
+  loja_db:
+    image: postgres
     volumes:
-      - ../:/var/www/html
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - finterna
+  loja_django:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - /Users/francisco/Downloads/anuncios-controle:/code/anuncios-controle
+      - /Users/francisco/Downloads/anuncios-controle/backend/:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - VIRTUAL_HOST=www.lojasdomago.com.br
+      - LETSENCRYPT_HOST=www.lojasdomago.com.br
+      - LETSENCRYPT_EMAIL=francisco@f5sites.com
+    depends_on:
+      - loja_db
+    networks:
+      - finterna
+
+networks:
+  finterna:
+    external: true
