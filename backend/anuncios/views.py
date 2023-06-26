@@ -24,21 +24,19 @@ def dir_scan(path):
     path_trocar = "/code/anuncios-controle/"
     #text="dir_scan"
     for i in os.scandir(path):
-        if i.is_file() and i.path.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
-            trocado = i.path
-            trocado = i.path.replace(path_trocar, "/static/")
+        if i.is_file() and i.path.lower().endswith(('.jpg')) and not i.path.lower().endswith(('_lowquality.jpg')):
+            #Using UNIX filesystem
+            imagem_lowquality = i.path[0:-4] + "_lowquality.jpg"
+            if not os.path.isfile(imagem_lowquality) :
+                foo = Image.open(i.path) 
+                foo = foo.resize((300,300),Image.ANTIALIAS)
+                foo.save(imagem_lowquality, optimize=True, quality=75)
+            
+            #GLOBAL_VAR_X.append('<p>' + trocadonew + '</p>')
+            #trocado = i.path
+            trocado = imagem_lowquality.replace(path_trocar, "/static/")
 
-            foo = Image.open(trocado)  # My image is a 200x374 jpeg that is 102kb large
-            
-            #foo.size  # (200, 374)
-            
-            foo = foo.resize((300,300),Image.ANTIALIAS)
-            
-            trocadonew = trocado[0:-4] + "_lowquality" + trocado[-4:]
-
-            foo.save(trocadonew, optimize=True, quality=75)  # The saved downsized image size is 24.8kb
-            GLOBAL_VAR_X.append('<p>' + trocadonew + '</p>')
-            #GLOBAL_VAR_X.append('<img src="' + trocadonew + '" width="200">') 
+            GLOBAL_VAR_X.append('<img src="' + trocado + '" width="200">') 
         elif i.is_dir():
             trocado = i.path.replace(path_trocar + "usados/", "")
             GLOBAL_VAR_X.append('<h3>' + trocado + '</h3>')
